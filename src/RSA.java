@@ -1,11 +1,12 @@
 import java.util.*;
 import java.lang.*;
+import java.math.BigInteger;
 import java.io.*;
 
 public class RSA
 {
-    static int MAX = 1000000;
-    static int MIN = 100000;
+    static String MAX = "1000000";
+    static String MIN = "100000";
     static int FIRSTPASS = 1000;
     static ArrayList<Integer> primeCandidates;
     
@@ -48,8 +49,7 @@ public class RSA
         message = message.toLowerCase();
         BitString output;
         
-        String current = String.valueOf(message.charAt(0));        
-        System.out.println(current + " " + huffmanValues.get(current));
+        String current = String.valueOf(message.charAt(0));
         output = new BitString(huffmanValues.get(current));
         
         for (int i = 1; i < message.length(); i++)
@@ -67,25 +67,26 @@ public class RSA
         return getPrimeCandidates(MIN, MAX);
     }
     
-    public static ArrayList<Integer> getPrimeCandidates(int lb, int ub)
+    public static ArrayList<Integer> getPrimeCandidates(String lb, String ub)
     {
         ArrayList<Integer> primeCandidates = new ArrayList();
         Random rn = new Random();
-        int lowBound = lb;//10000;//rn.nextInt(MAX[0] + MIN[0] + 1) + MIN[0];
-        int upBound = ub;//100000;//rn.nextInt(MAX[1] + MIN[1] + 1) + MIN[1];
+        BigInteger lowBound = new BigInteger(lb);//10000;//rn.nextInt(MAX[0] + MIN[0] + 1) + MIN[0];
+        BigInteger upBound = new BigInteger(ub);//100000;//rn.nextInt(MAX[1] + MIN[1] + 1) + MIN[1];
         int firstpass = FIRSTPASS;
         
         HashMap<Integer, Boolean> validate = new HashMap<Integer, Boolean>();
         System.out.println("( " + lowBound + ", " + upBound + " )");
         int minUnchecked = 1;
         
-        for (int i = 2; i <= Math.min(firstpass, Math.sqrt(upBound)); i++)
+        BigInteger counter = new BigInteger("2");
+        for (while counter < (int)bigSqrt(upBound))
         {
-            if (validate.get(i) == null)
+            if (validate.get(counter) == null)
             {
-                for (int j = Math.floorDiv(lowBound, i); j <= upBound / i; j++)
+                for (int j = Math.floorDiv(lowBound, counter); j <= upBound / counter; j++)
                 {
-                    validate.put(i*j, true); 
+                    validate.put(counter*j, true); 
                 }
                 
             }
@@ -97,8 +98,21 @@ public class RSA
                 primeCandidates.add(i);
             }
         }
-        System.out.println("candidates got");
         return primeCandidates;
+    }
+    
+    private static BigInteger bigSqrt(BigInteger num)
+    {
+        BigInteger a = BigInteger.ONE;
+        BigInteger b = new BigInteger(num.shiftRight(5).add(new BigInteger("8")).toString());
+        while(b.compareTo(a) >= 0) 
+        {
+            BigInteger mid = new BigInteger(a.add(b).shiftRight(1).toString());
+            if(mid.multiply(mid).compareTo(num) > 0) b = mid.subtract(BigInteger.ONE);
+            else a = mid.add(BigInteger.ONE);
+        }
+        return a.subtract(BigInteger.ONE);
+      }
     }
     
     public static int getOnePrime()
@@ -168,6 +182,7 @@ public class RSA
     {
         Random rn = new Random();
         int candidate;
+        System.out.println("max: " + maxBound);
         candidate = rn.nextInt(maxBound - 1) + 1;
         
         while (! Coprime(candidate, maxBound))
@@ -274,6 +289,8 @@ public class RSA
     public static void main(String[] args)
     {
         Random rn = new Random();
+        initializeEncoding();
+        
         BitString message = huffmanEncode(MESSAGE);
         int hashedMessage = Hash.hash(message);
         
@@ -288,7 +305,7 @@ public class RSA
         
         int encryptedMessage = encode(hashedMessage, e, n);
         
-        System.out.println(message + " : " + encryptedMessage);
+        System.out.println(message + " : " + hashedMessage + " : " + encryptedMessage);
         
     }
 }
