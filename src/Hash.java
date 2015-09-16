@@ -39,9 +39,7 @@ public class Hash
         {
             binaryRep.set(447 + i, finalConcat.get(i));
         }        
-        
-        System.out.println("The final padded binary representation becomes " + binaryRep);
-        
+                
         //Splits the binary message into sets of 512 blocks
         ArrayList<BitString> messageBlocks = new ArrayList();
         for (int i = 0; i < blocks; i++)
@@ -57,10 +55,12 @@ public class Hash
         for (int i = 1; i <= blocks; i++)
         {
             ArrayList<BitString> words = blocksToWords(messageBlocks);
+            
             for (int param = 16; param < 80; param++)
-            {
-                words.set(param, words.get(param - 3).xorP(words.get(param - 8)).xorP(words.get(param - 14)).xorP(words.get(param - 16)).rotateLeft(1));
+            {                
+                words.add(words.get(param - 3).xorP(words.get(param - 8)).xorP(words.get(param - 14)).xorP(words.get(param - 16)).rotateLeft(1));
             }
+            
             BitString tempA = (BitString)H0.clone();
             BitString tempB = (BitString)H1.clone();
             BitString tempC = (BitString)H2.clone();
@@ -181,8 +181,6 @@ public class Hash
     
     public static void main(String[] args)
     {
-        int message = 16;
-        int encryptedMessage = hash(message);
-        System.out.println(encryptedMessage);
+                
     }
 }

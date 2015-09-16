@@ -45,9 +45,13 @@ public class RSA
     
     public static BitString huffmanEncode(String message)
     {
+        message = message.toLowerCase();
         BitString output;
-        String current = String.valueOf(message.charAt(0));
+        
+        String current = String.valueOf(message.charAt(0));        
+        System.out.println(current + " " + huffmanValues.get(current));
         output = new BitString(huffmanValues.get(current));
+        
         for (int i = 1; i < message.length(); i++)
         {
             current = String.valueOf(message.charAt(i));
@@ -252,11 +256,6 @@ public class RSA
         }
     }
     
-    public static int SHA1()
-    {
-        return -1;
-    }
-    
     public static int padMessage(int message)
     {
         return Hash.hash(message);
@@ -280,7 +279,6 @@ public class RSA
         
         int prime1 = getOnePrime();
         int prime2 = getOnePrime();
-        System.out.println("primes: " + prime1 + ", " + prime2);
         
         int n = prime1*prime2;
         int phi = (prime1 - 1)*(prime2 - 1); //totient is multiplicative, and totient of a prime p is p-1
@@ -288,6 +286,9 @@ public class RSA
         int e = publicKeyExponent(phi);           //e is arbitrary 1<e<phi(n)
         int d = privateKeyExponent(phi, e);
         
+        int encryptedMessage = encode(hashedMessage, e, n);
+        
+        System.out.println(message + " : " + encryptedMessage);
         
     }
 }
