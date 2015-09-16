@@ -4,10 +4,18 @@ import java.io.*;
 
 public class Hash
 {
-    public static int SHA1(int message)
+    
+    public static int hash(BitString message)
     {
-        System.out.println("SHA-1 on message " + message);
-        
+      //Pre-work determines how many 512-bit chunks need to be alotted
+        int blocks = (int)Math.ceil(message.size() / 512);
+        BitString zeros = new BitString(512*blocks);
+        message.xor(zeros);
+        return SHA1(message, blocks);
+    }
+    
+    public static int hash(int message)
+    {
         //Pre-work determines how many 512-bit chunks need to be alotted
         int blocks = (int)Math.ceil(Math.ceil((int)(Math.log(message) / Math.log(2))) / 512);   //Number of 512-bit blocks necessary
         
@@ -17,6 +25,13 @@ public class Hash
         BitString binaryRep = decimalToBinary(message, 512*blocks);
         
         System.out.println("Initial Binary representation " + binaryRep);
+        return SHA1(binaryRep, blocks);
+    }
+    
+    private static int SHA1(BitString binaryRep, int blocks)
+    {        
+        
+        
         
         int origLength = binaryRep.length();
         BitString finalConcat = decimalToBinary(origLength);
@@ -167,7 +182,7 @@ public class Hash
     public static void main(String[] args)
     {
         int message = 16;
-        int encryptedMessage = SHA1(message);
+        int encryptedMessage = hash(message);
         System.out.println(encryptedMessage);
     }
 }

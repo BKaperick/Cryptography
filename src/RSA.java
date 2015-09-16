@@ -9,7 +9,52 @@ public class RSA
     static int FIRSTPASS = 1000;
     static ArrayList<Integer> primeCandidates;
     
-    static int MESSAGE = "Hello"
+    static String MESSAGE = "Hello";
+    
+    static HashMap<String, String> huffmanValues = new HashMap<String, String>();
+    
+    public static void initializeEncoding()
+    {
+        huffmanValues.put("a", "1111");
+        huffmanValues.put("b", "101000");
+        huffmanValues.put("c", "01010");
+        huffmanValues.put("d", "11011");
+        huffmanValues.put("e", "100");
+        huffmanValues.put("f", "01011");
+        huffmanValues.put("g", "00001");
+        huffmanValues.put("h", "0100");
+        huffmanValues.put("i", "0111");
+        huffmanValues.put("j", "1101000110");
+        huffmanValues.put("k", "11010000");
+        huffmanValues.put("l", "10101");
+        huffmanValues.put("m", "00011");
+        huffmanValues.put("n", "1100");
+        huffmanValues.put("o", "1110");
+        huffmanValues.put("p", "00000");
+        huffmanValues.put("q", "1101000101");
+        huffmanValues.put("r", "1011");
+        huffmanValues.put("s", "0110");
+        huffmanValues.put("t", "001");
+        huffmanValues.put("u", "00010");
+        huffmanValues.put("v", "1101001");
+        huffmanValues.put("w", "101001");
+        huffmanValues.put("x", "1101000111");
+        huffmanValues.put("y", "110101");
+        huffmanValues.put("z", "1101000100");
+    }
+    
+    public static BitString huffmanEncode(String message)
+    {
+        BitString output;
+        String current = String.valueOf(message.charAt(0));
+        output = new BitString(huffmanValues.get(current));
+        for (int i = 1; i < message.length(); i++)
+        {
+            current = String.valueOf(message.charAt(i));
+            output = output.concatenate(new BitString(huffmanValues.get(current)));
+        }
+        return output;
+    }
     
     static Hash hash = new Hash();
 
@@ -214,20 +259,24 @@ public class RSA
     
     public static int padMessage(int message)
     {
-        return hash.SHA1(message);
+        return Hash.hash(message);
     }
     
     public static int unpadMessage(int paddedMessage)
     {
-        
+        return 0;
+    }
+    
+    public static int encode(int message, int publicKeyExponent, int base)
+    {
+        return fastPower(message, publicKeyExponent) % base;
     }
     
     public static void main(String[] args)
     {
         Random rn = new Random();
-        int message = MESSAGE;
-        int hashMessage;
-        padMessage()
+        BitString message = huffmanEncode(MESSAGE);
+        int hashedMessage = Hash.hash(message);
         
         int prime1 = getOnePrime();
         int prime2 = getOnePrime();
@@ -238,5 +287,7 @@ public class RSA
         
         int e = publicKeyExponent(phi);           //e is arbitrary 1<e<phi(n)
         int d = privateKeyExponent(phi, e);
+        
+        
     }
 }
