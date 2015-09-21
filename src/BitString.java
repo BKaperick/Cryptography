@@ -1,4 +1,5 @@
 import java.util.*;
+import java.math.BigInteger;
 
 public class BitString extends java.util.BitSet
 {
@@ -28,6 +29,19 @@ public class BitString extends java.util.BitSet
     public BitString(int length)
     {
         super(length);
+    }
+    
+    public BigInteger toBigInt()
+    {
+        BigInteger output = BigInteger.ZERO;
+        int power = 0;
+        int base;
+        for (int i = 0; i < this.size(); i++)
+        {
+            boolean b = this.get(i);
+            output.add(BigInteger.valueOf((b? 1: 0)*Math.pow(2, power))) ;
+            power ++;
+        }
     }
     
     public BitString andP(BitString other)

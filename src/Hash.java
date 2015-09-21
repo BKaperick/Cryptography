@@ -30,9 +30,6 @@ public class Hash
     
     private static int SHA1(BitString binaryRep, int blocks)
     {        
-        
-        
-        
         int origLength = binaryRep.length();
         BitString finalConcat = decimalToBinary(origLength);
         for (int i = 0; i < finalConcat.size(); i++)
