@@ -258,6 +258,7 @@ public class RSA
      */
     public static BigInteger productCongruentMod1(BigInteger num, BigInteger base)
     {
+        System.out.println("num: " + num.toString() + " base: " + base.toString());
         ArrayList<BigInteger> validOutput = new ArrayList();
         BigInteger counter = BigInteger.ONE;
         while (counter.compareTo(num.add(BigInteger.ONE).divide(base)) <= 0)
@@ -267,14 +268,15 @@ public class RSA
                 validOutput.add(counter);
             }
             counter = counter.add(BigInteger.ONE);
+            System.out.println(num.add(BigInteger.ONE).divide(base) + " " + validOutput.toString());
         }
         Random rn = new Random();
         return validOutput.get(rn.nextInt(validOutput.size()));
     }
     
-    public static int publicKey(int base, int exponent, int message)
+    public static BigInteger publicKey(BigInteger base, BigInteger exponent, BigInteger message)
     {
-        return fastPower(message, exponent) % base;
+        return fastPower(message, exponent).remainder(base);
     }    
     
     /*
@@ -318,6 +320,7 @@ public class RSA
         
         BigInteger prime1 = getOnePrime();
         BigInteger prime2 = getOnePrime();
+        System.out.println(randomBigInteger(BigInteger.valueOf(10000)));
         
         BigInteger n = prime1.multiply(prime2);
         BigInteger phi = prime1.subtract(BigInteger.ONE).multiply(prime2.subtract(BigInteger.ONE)); //totient is multiplicative, and totient of a prime p is p-1
