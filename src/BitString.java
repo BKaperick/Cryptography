@@ -39,6 +39,7 @@ public class BitString extends java.util.BitSet
         for (int i = 0; i < this.size(); i++)
         {
             boolean b = this.get(i);
+            
             output.add(BigInteger.valueOf((b? 1: 0)*Math.pow(2, power))) ;
             power ++;
         }
